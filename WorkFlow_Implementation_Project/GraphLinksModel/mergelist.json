@@ -1,0 +1,295 @@
+{
+  "class": "go.GraphLinksModel",
+  "linkFromPortIdProperty": "fromPort",
+  "linkToPortIdProperty": "toPort",
+  "nodeDataArray": [
+    {
+      "key": 3,
+      "name": "text",
+      "text": "GTRSiteColon-Address"
+    },
+    {
+      "key": 4,
+      "name": "text",
+      "text": "GTRSiteColon-Contact"
+    },
+    {
+      "key": 5,
+      "name": "text",
+      "text": "InfoGroupRepoOutputUpdate-LD"
+    },
+    {
+      "key": 7,
+      "name": "text",
+      "text": "InfoGroupRepoOutputUpdate-Address"
+    },
+    {
+      "key": 6,
+      "name": "text",
+      "text": "InfoGroupRepoOutputUpdate-Contact"
+    },
+    {
+      "key": 9,
+      "name": "text",
+      "text": "GTRSiteColon-Email"
+    },
+    {
+      "key": 8,
+      "name": "text",
+      "text": "HTMLDownload"
+    },
+    {
+      "key": 11,
+      "name": "text",
+      "text": "AddressCleanser"
+    },
+    {
+      "key": 10,
+      "name": "text",
+      "text": "InfoGroupRepoOutputUpdate-Email"
+    },
+    {
+      "key": 12,
+      "name": "text",
+      "text": "GATE-US"
+    },
+    {
+      "key": 13,
+      "name": "text",
+      "text": "GATE-CA"
+    },
+    {
+      "key": 14,
+      "name": "text",
+      "text": "GATE Merge-SP"
+    },
+    {
+      "key": 14,
+      "name": "text",
+      "text": "GATE Merge-SP"
+    },
+    {
+      "key": 16,
+      "name": "text",
+      "text": "Gate PostProcessing -SP"
+    },
+    {
+      "key": 17,
+      "name": "text",
+      "text": "Email Classification"
+    },
+    {
+      "key": 19,
+      "name": "text",
+      "text": "Fuzzy Rule -SP"
+    },
+    {
+      "key": 18,
+      "name": "text",
+      "text": "InfoGroupRepoOutputUpdate"
+    },
+    {
+      "key": 20,
+      "name": "text",
+      "text": "RepoCreation -SP"
+    },
+    {
+      "key": 21,
+      "name": "text",
+      "text": "FuzzyMapping"
+    },
+    {
+      "key": 22,
+      "name": "text",
+      "text": "RepoCreation -SP"
+    },
+    {
+      "key": 23,
+      "name": "text",
+      "text": "FuzzySliciing"
+    },
+    {
+      "key": 24,
+      "name": "text",
+      "text": "RepoUpdate"
+    },
+    {
+      "key": 25,
+      "name": "text",
+      "text": "SPBotMinRule -SP"
+    },
+    {
+      "key": 26,
+      "name": "text",
+      "text": "CNValidator"
+    },
+    {
+      "key": 27,
+      "name": "text",
+      "text": "RepoUpdate"
+    },
+    {
+      "key": 27,
+      "name": "text",
+      "text": "RepoUpdate"
+    }
+  ],
+  "linkDataArray": [
+    {
+      "from": 2,
+      "to": 3,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 2,
+      "to": 4,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 2,
+      "to": 5,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 3,
+      "to": 7,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 4,
+      "to": 6,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 6,
+      "to": 9,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 7,
+      "to": 8,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 8,
+      "to": 11,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 9,
+      "to": 10,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 11,
+      "to": 13,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 12,
+      "to": 14,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 13,
+      "to": 14,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 14,
+      "to": 16,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 14,
+      "to": 17,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 16,
+      "to": 19,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 17,
+      "to": 18,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 19,
+      "to": 20,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 20,
+      "to": 21,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 21,
+      "to": 22,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 22,
+      "to": 23,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 23,
+      "to": 24,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 23,
+      "to": 25,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 25,
+      "to": 26,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 26,
+      "to": 27,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 26,
+      "to": 27,
+      "fromPort": "B",
+      "toPort": "T"
+    }
+  ]
+}

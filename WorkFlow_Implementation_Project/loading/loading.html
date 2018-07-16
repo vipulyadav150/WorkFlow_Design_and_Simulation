@@ -1,0 +1,62 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+	<title>File loading Sample</title>
+	<meta charset="UTF-8">
+	<script src="../release/go.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.8.21/go-debug.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="../assets/js/goSamples.js"></script>  
+</head>
+
+
+<body>
+
+
+	
+<script>
+	
+	// jQuery.get('sample.txt',function(data){
+	// 	alert(data);
+	// 	$('#div').html(data.replace('n',''));
+	// });
+	$(document).ready(function(){
+    $("button").click(function(){
+        $("#div1").load("sample.txt");
+    });
+});
+</script>
+
+<div id='div1'>
+		
+	</div>
+</body>
+</html>
+ -->
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+
+</script>
+<script src="../sample.txt/"></script>  
+<script>
+	
+
+
+$(document).ready(function(){
+    $("button").click(function(){
+        $("#div1").load("sample.txt");
+    });
+});
+</script>
+</head>
+<body>
+
+<div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
+
+<button>Get External Content</button>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+{
+	"Actions": [{
+			"ActionId": 1,
+			"SourceBotName": null,
+			"TargetBotName": "HeroldPreprocessing-SP",
+			"ParentActionId": [0]
+		},
+		{
+			"ActionId": 2,
+			"SourceBotName": "HeroldPreprocessing-SP",
+			"TargetBotName": "GTR_KG_1",
+			"ParentActionId": [1]
+		},
+		{
+			"ActionId": 3,
+			"SourceBotName": "HeroldPreprocessing-SP",
+			"TargetBotName": "GTR_KG_2",
+			"ParentActionId": [1]
+		},
+		{
+			"ActionId": 4,
+			"SourceBotName": "HeroldPreprocessing-SP",
+			"TargetBotName": "DuplicateRecords-SP",
+			"ParentActionId": [1]
+		},
+		{
+			"ActionId": 5,
+			"SourceBotName": "GTR_KG",
+			"TargetBotName": "GTR_Merge-SP",
+			"ParentActionId": [2, 3]
+		},
+		{
+			"ActionId": 6,
+			"SourceBotName": "GTR_Merge",
+			"TargetBotName": "GTR_Elimination-SP",
+			"ParentActionId": [5]
+		},
+		{
+			"ActionId": 7,
+			"SourceBotName": "GTR_Elimination-SP",
+			"TargetBotName": "URLMatcher",
+			"ParentActionId": [6]
+		},
+		{
+			"ActionId": 8,
+			"SourceBotName": "URLMatcher",
+			"TargetBotName": "URLSelection-SP",
+			"ParentActionId": [7]
+		}
+	]
+
+}

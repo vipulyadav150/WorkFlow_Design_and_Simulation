@@ -1,0 +1,113 @@
+{
+  "class": "go.GraphLinksModel",
+  "linkFromPortIdProperty": "fromPort",
+  "linkToPortIdProperty": "toPort",
+  "nodeDataArray": [
+    {
+      "key": 0,
+      "name": "Start",
+      "text": "Start"
+    },
+    {
+      "key": 1,
+      "name": "HeroldPreprocessing-SP",
+      "text": "HeroldPreprocessing-SP"
+    },
+    {
+      "key": 2,
+      "name": "GTR_KG_1",
+      "text": "GTR_KG_1"
+    },
+    {
+      "key": 3,
+      "name": "GTR_KG_2",
+      "text": "GTR_KG_2"
+    },
+    {
+      "key": 4,
+      "name": "DuplicateRecords-SP",
+      "text": "DuplicateRecords-SP"
+    },
+    {
+      "key": 5,
+      "name": "GTR_Merge-SP",
+      "text": "GTR_Merge-SP"
+    },
+    {
+      "key": 5,
+      "name": "GTR_Merge-SP",
+      "text": "GTR_Merge-SP"
+    },
+    {
+      "key": 6,
+      "name": "GTR_Elimination-SP",
+      "text": "GTR_Elimination-SP"
+    },
+    {
+      "key": 7,
+      "name": "URLMatcher",
+      "text": "URLMatcher"
+    },
+    {
+      "key": 8,
+      "name": "URLSelection-SP",
+      "text": "URLSelection-SP"
+    }
+  ],
+  "linkDataArray": [
+    {
+      "from": 0,
+      "to": 1,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 1,
+      "to": 3,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 1,
+      "to": 4,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 2,
+      "to": 5,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 3,
+      "to": 5,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 5,
+      "to": 6,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 6,
+      "to": 7,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 7,
+      "to": 8,
+      "fromPort": "B",
+      "toPort": "T"
+    }
+  ]
+}

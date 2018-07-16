@@ -1,0 +1,592 @@
+
+<!-- From Merginglists.py and x.json -->
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InfoGroup WorkFlow</title>
+<meta name="description" content="Interactive flowchart diagram implemented by GoJS in JavaScript for HTML." />
+
+<meta charset="UTF-8">
+<!-- <script src="../release/go.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/1.8.21/go-debug.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<!-- <script src="../assets/js/goSamples.js"></script>   -->
+<script id="code">
+  function init() {
+     
+    var $ = go.GraphObject.make; 
+    myDiagram =
+      $(go.Diagram, "myDiagramDiv", 
+        {
+          initialContentAlignment: go.Spot.Center,
+          layout:
+            $(go.TreeLayout,
+              {
+                arrangement: go.TreeLayout.ArrangementHorizontal,
+                
+                angle: 90,
+                layerSpacing: 35,
+                
+                alternateAngle: 90,
+                alternateLayerSpacing: 35,
+                alternateAlignment: go.TreeLayout.AlignmentBus,
+                alternateNodeSpacing: 20
+              }),
+          allowDrop: true,  
+          "LinkDrawn": showLinkLabel, 
+          "LinkRelinked": showLinkLabel,
+          scrollsPageOnFocus: false,
+          "undoManager.isEnabled": true 
+        });
+    
+    myDiagram.addDiagramListener("Modified", function(e) {
+      var button = document.getElementById("SaveButton");
+      if (button) button.disabled = !myDiagram.isModified;
+      var idx = document.title.indexOf("*");
+      if (myDiagram.isModified) {
+        if (idx < 0) document.title += "*";
+      } else {
+        if (idx >= 0) document.title = document.title.substr(0, idx);
+      }
+    });
+    
+    function nodeStyle() {
+      return [
+        
+        new go.Binding("location", "loc", go.Point.parse).makeTwoWay(go.Point.stringify),
+        {
+          
+          locationSpot: go.Spot.Center,
+          
+          mouseEnter: function (e, obj) { showPorts(obj.part, true); },
+          mouseLeave: function (e, obj) { showPorts(obj.part, false); }
+        }
+      ];
+    }
+    
+    
+    function makePort(name, spot, output, input) {
+      
+      return $(go.Shape, "Circle",
+               {
+                  fill: "transparent",
+                  stroke: null,  
+                  desiredSize: new go.Size(8, 8),
+                  alignment: spot, alignmentFocus: spot,  
+                  portId: name,  
+                  fromSpot: spot, toSpot: spot,
+                  fromLinkable: output, toLinkable: input,
+                  cursor: "pointer" 
+               });
+    }
+    
+    var lightText = 'whitesmoke';
+    myDiagram.nodeTemplateMap.add("",  
+      $(go.Node, "Spot", nodeStyle(),
+        
+        $(go.Panel, "Auto",
+          $(go.Shape, "Rectangle",
+            { fill: "#00A9C9", stroke: null ,fromLinkable: true, toLinkable: true },
+            new go.Binding("figure", "figure")),
+          $(go.TextBlock,
+            {
+              font: "bold 11pt Helvetica, Arial, sans-serif",
+              stroke: lightText,
+              margin: 8,
+              maxSize: new go.Size(160, NaN),
+              wrap: go.TextBlock.WrapFit,
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
+        ),
+        
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, true, true),
+        makePort("R", go.Spot.Right, true, true),
+        makePort("B", go.Spot.Bottom, true, false)
+      ));
+    myDiagram.nodeTemplateMap.add("Start",
+      $(go.Node, "Spot", nodeStyle(),
+        $(go.Panel, "Auto",
+          $(go.Shape, "Circle",
+            { minSize: new go.Size(40, 40), fill: "#79C900", stroke: null }),
+          $(go.TextBlock, "Start",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        
+        makePort("L", go.Spot.Left, true, false),
+        makePort("R", go.Spot.Right, true, false),
+        makePort("B", go.Spot.Bottom, true, false)
+      ));
+    myDiagram.nodeTemplateMap.add("End",
+      $(go.Node, "Spot", nodeStyle(),
+        $(go.Panel, "Auto",
+          $(go.Shape, "Circle",
+            { minSize: new go.Size(40, 40), fill: "#DC3C00", stroke: null }),
+          $(go.TextBlock, "End",
+            { font: "bold 11pt Helvetica, Arial, sans-serif", stroke: lightText },
+            new go.Binding("text"))
+        ),
+        
+        makePort("T", go.Spot.Top, false, true),
+        makePort("L", go.Spot.Left, false, true),
+        makePort("R", go.Spot.Right, false, true)
+      ));
+    myDiagram.nodeTemplateMap.add("Comment",
+      $(go.Node, "Auto", nodeStyle(),
+        $(go.Shape, "File",
+          { fill: "#EFFAB4", stroke: null }),
+        $(go.TextBlock,
+          {
+            margin: 5,
+            maxSize: new go.Size(200, NaN),
+            wrap: go.TextBlock.WrapFit,
+            textAlign: "center",
+            editable: true,
+            font: "bold 12pt Helvetica, Arial, sans-serif",
+            stroke: '#454545'
+          },
+          new go.Binding("text").makeTwoWay())
+        
+      ));
+    
+    myDiagram.linkTemplate =
+      $(go.Link,  
+        {
+          routing: go.Link.AvoidsNodes,
+          curve: go.Link.JumpOver,
+          corner: 5, toShortLength: 4,
+          relinkableFrom: true,
+          relinkableTo: true,
+          reshapable: true,
+          resegmentable: true,
+          // mouse-overs subtly highlight links:
+          mouseEnter: function(e, link) { link.findObject("HIGHLIGHT").stroke = "rgba(30,144,255,0.2)"; },
+          mouseLeave: function(e, link) { link.findObject("HIGHLIGHT").stroke = "transparent"; }
+        },
+        new go.Binding("points").makeTwoWay(),
+        $(go.Shape,  
+          { isPanelMain: true, strokeWidth: 8, stroke: "transparent", name: "HIGHLIGHT" }),
+        $(go.Shape,  
+          { isPanelMain: true, stroke: "gray", strokeWidth: 2 }),
+        $(go.Shape,  
+          { toArrow: "standard", stroke: null, fill: "gray"}),
+        $(go.Panel, "Auto",  
+          { visible: false, name: "LABEL", segmentIndex: 2, segmentFraction: 0.5},
+          new go.Binding("visible", "visible").makeTwoWay(),
+          $(go.Shape, "RoundedRectangle", 
+            { fill: "#F8F8F8", stroke: null }),
+          $(go.TextBlock, "", 
+            {
+              textAlign: "center",
+              font: "10pt helvetica, arial, sans-serif",
+              stroke: "#333333",
+              editable: true
+            },
+            new go.Binding("text").makeTwoWay())
+        )
+      );
+   
+    function showLinkLabel(e) {
+      var label = e.subject.findObject("LABEL");
+      if (label !== null) label.visible = (e.subject.fromNode.data.figure === "Diamond");
+    }
+    
+    myDiagram.toolManager.linkingTool.temporaryLink.routing = go.Link.Orthogonal;
+    myDiagram.toolManager.relinkingTool.temporaryLink.routing = go.Link.Orthogonal;
+    load();  
+    myPalette =
+      $(go.Palette, "myPaletteDiv",  
+        {
+          scrollsPageOnFocus: false,
+          nodeTemplateMap: myDiagram.nodeTemplateMap,  
+          model: new go.GraphLinksModel([  
+            { category: "Start", text: "Start" },
+            { text: "Step" },
+            { text: "???", figure: "Diamond" },
+            { category: "End", text: "End" },
+            { category: "Comment", text: "Comment" }
+          ])
+        });
+  } 
+
+
+  function showPorts(node, show) {
+    var diagram = node.diagram;
+    if (!diagram || diagram.isReadOnly || !diagram.allowLink) return;
+    node.ports.each(function(port) {
+        port.stroke = (show ? "white" : null);
+      });
+  }
+  
+  function save() {
+    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+    myDiagram.isModified = false;
+  }
+  
+  function load() {
+    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+  }
+  
+  
+  function makeSVG() {
+    var svg = myDiagram.makeSvg({
+        scale: 0.5
+      });
+    svg.style.border = "1px solid black";
+    obj = document.getElementById("SVGArea");
+    obj.appendChild(svg);
+    if (obj.children.length > 0) {
+      obj.replaceChild(svg, obj.children[0]);
+    }
+  }
+
+  // jQuery("#textarea").load("hello.txt");
+</script>
+</head>
+<body onload="init()">
+<div id="sample">
+  <div style="width: 100%; display: flex; justify-content: space-between">
+    <div id="myPaletteDiv" style="width: 100px; margin-right: 2px; background-color: whitesmoke; border: solid 1px black"></div>
+    <div id="myDiagramDiv" style="flex-grow: 1; height: 720px; border: solid 1px black"></div>
+  </div>
+  
+  
+ 
+  <button id="SaveButton" onclick="save()">Save</button>
+  <button onclick="load()">Load</button>
+  Diagram Model saved in JSON format:
+  <textarea id="mySavedModel" style="width:100%;height:300px">
+{
+  "class": "go.GraphLinksModel",
+  "linkFromPortIdProperty": "fromPort",
+  "linkToPortIdProperty": "toPort",
+  "nodeDataArray": [
+    {
+      "key": 0,
+      "name": "Start",
+      "text": "Start"
+    },
+    {
+      "key": 1,
+      "name": "InputRepoUpdate",
+      "text": "InputRepoUpdate"
+    },
+    {
+      "key": 2,
+      "name": "LiveDormant",
+      "text": "LiveDormant"
+    },
+    {
+      "key": 3,
+      "name": "GTRSiteColon-Address",
+      "text": "GTRSiteColon-Address"
+    },
+    {
+      "key": 4,
+      "name": "GTRSiteColon-Contact",
+      "text": "GTRSiteColon-Contact"
+    },
+    {
+      "key": 5,
+      "name": "InfoGroupRepoOutputUpdate-LD",
+      "text": "InfoGroupRepoOutputUpdate-LD"
+    },
+    {
+      "key": 7,
+      "name": "InfoGroupRepoOutputUpdate-Address",
+      "text": "InfoGroupRepoOutputUpdate-Address"
+    },
+    {
+      "key": 6,
+      "name": "InfoGroupRepoOutputUpdate-Contact",
+      "text": "InfoGroupRepoOutputUpdate-Contact"
+    },
+    {
+      "key": 9,
+      "name": "GTRSiteColon-Email",
+      "text": "GTRSiteColon-Email"
+    },
+    {
+      "key": 8,
+      "name": "HTMLDownload",
+      "text": "HTMLDownload"
+    },
+    {
+      "key": 11,
+      "name": "AddressCleanser",
+      "text": "AddressCleanser"
+    },
+    {
+      "key": 10,
+      "name": "InfoGroupRepoOutputUpdate-Email",
+      "text": "InfoGroupRepoOutputUpdate-Email"
+    },
+    {
+      "key": 12,
+      "name": "GATE-US",
+      "text": "GATE-US"
+    },
+    {
+      "key": 13,
+      "name": "GATE-CA",
+      "text": "GATE-CA"
+    },
+    {
+      "key": 14,
+      "name": "GATE Merge-SP",
+      "text": "GATE Merge-SP"
+    },
+    {
+      "key": 14,
+      "name": "GATE Merge-SP",
+      "text": "GATE Merge-SP"
+    },
+    {
+      "key": 16,
+      "name": "Gate PostProcessing -SP",
+      "text": "Gate PostProcessing -SP"
+    },
+    {
+      "key": 17,
+      "name": "Email Classification",
+      "text": "Email Classification"
+    },
+    {
+      "key": 19,
+      "name": "Fuzzy Rule -SP",
+      "text": "Fuzzy Rule -SP"
+    },
+    {
+      "key": 18,
+      "name": "InfoGroupRepoOutputUpdate",
+      "text": "InfoGroupRepoOutputUpdate"
+    },
+    {
+      "key": 20,
+      "name": "RepoCreation -SP",
+      "text": "RepoCreation -SP"
+    },
+    {
+      "key": 21,
+      "name": "FuzzyMapping",
+      "text": "FuzzyMapping"
+    },
+    {
+      "key": 22,
+      "name": "RepoCreation -SP",
+      "text": "RepoCreation -SP"
+    },
+    {
+      "key": 23,
+      "name": "FuzzySliciing",
+      "text": "FuzzySliciing"
+    },
+    {
+      "key": 24,
+      "name": "RepoUpdate",
+      "text": "RepoUpdate"
+    },
+    {
+      "key": 25,
+      "name": "SPBotMinRule -SP",
+      "text": "SPBotMinRule -SP"
+    },
+    {
+      "key": 26,
+      "name": "CNValidator",
+      "text": "CNValidator"
+    },
+    {
+      "key": 27,
+      "name": "RepoUpdate",
+      "text": "RepoUpdate"
+    },
+    {
+      "key": 27,
+      "name": "RepoUpdate",
+      "text": "RepoUpdate"
+    }
+  ],
+  "linkDataArray": [
+    {
+      "from": 0,
+      "to": 1,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 0,
+      "to": 2,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 2,
+      "to": 4,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 2,
+      "to": 5,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 3,
+      "to": 7,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 4,
+      "to": 6,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 6,
+      "to": 9,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 7,
+      "to": 8,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 8,
+      "to": 11,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 9,
+      "to": 10,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 11,
+      "to": 12,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 11,
+      "to": 13,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 12,
+      "to": 14,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 13,
+      "to": 14,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 14,
+      "to": 16,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 14,
+      "to": 17,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 16,
+      "to": 19,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 17,
+      "to": 18,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 19,
+      "to": 20,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 20,
+      "to": 21,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 21,
+      "to": 22,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 22,
+      "to": 23,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 23,
+      "to": 24,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 23,
+      "to": 25,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 25,
+      "to": 26,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 26,
+      "to": 27,
+      "fromPort": "B",
+      "toPort": "T"
+    },
+    {
+      "from": 26,
+      "to": 27,
+      "fromPort": "B",
+      "toPort": "T"
+    }
+  ]
+}
+  </textarea>
+  <!-- <div id="text"></div> -->
+
+  <button onclick="makeSVG()">Render as SVG</button>
+  <div id="SVGArea"></div>
+</div>
+</body>
+</html>
